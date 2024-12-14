@@ -92,13 +92,21 @@ async function openRepo(repo){
             console.log(chalk.white.bgBlack('node modules installed / updated'));
         } catch (error) {
             console.log(chalk.red.bold.bgBlackBright('Error installing node modules'));
+        }finally {
+            try {
+                console.log('Trying to install node peer dependencies');
+                await execSync('cd '+ repo +' && sudo npm install --legacy-peer-deps',{ stdio: 'inherit' });
+                console.log(chalk.white.bgBlack('node legacy peer dependencies installed / updated'));
+            } catch (error) {
+                console.log(chalk.red.bold.bgBlackBright('Error installing node legacy peer dependencies'));
+            }
         }
     }
 
     if(fs.existsSync(vitePath)){
         try {
             await execSync('cd '+ repo +' && sudo npm run build',{ stdio: 'inherit' });
-            console.log(chalk.white.bgBlack('vite started'));
+            console.log(chalk.white.bgBlack('vite build completed'));
         } catch (error2) {
             console.log(chalk.red.bold.bgBlackBright('Error starting vite:'));
         }
